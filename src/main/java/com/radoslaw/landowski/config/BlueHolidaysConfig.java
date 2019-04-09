@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "app")
 public class BlueHolidaysConfig {
 
-    public static final String INPUT_DATE_FORMAT = "YYYY-MM-DD";
+    public static final String INPUT_DATE_FORMAT = "yyyy-MM-dd";
 
     private String applicationName;
 

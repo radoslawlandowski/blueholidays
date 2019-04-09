@@ -1,23 +1,23 @@
 package com.radoslaw.landowski.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class HolidayInfo {
-    private Date date;
+    private LocalDate date;
     private String firstCountryHolidayName;
     private String secondCountryHolidayName;
 
-    public HolidayInfo(Date date, String firstCountryHolidayName, String secondCountryHolidayName) {
+    public HolidayInfo(LocalDate date, String firstCountryHolidayName, String secondCountryHolidayName) {
         this.date = date;
         this.firstCountryHolidayName = firstCountryHolidayName;
         this.secondCountryHolidayName = secondCountryHolidayName;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
