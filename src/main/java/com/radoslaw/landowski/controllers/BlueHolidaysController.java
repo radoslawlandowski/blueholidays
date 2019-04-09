@@ -1,6 +1,8 @@
 package com.radoslaw.landowski.controllers;
 
 import com.radoslaw.landowski.config.BlueHolidaysConfig;
+import com.radoslaw.landowski.model.HolidayInfo;
+import com.radoslaw.landowski.service.HolidayInfoObtainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -14,14 +16,20 @@ import java.util.Date;
 public class BlueHolidaysController {
     private final static Logger logger = LoggerFactory.getLogger(BlueHolidaysController.class);
 
+    private HolidayInfoObtainer holidayInfoObtainer;
+
+    public BlueHolidaysController(HolidayInfoObtainer holidayInfoObtainer) {
+        this.holidayInfoObtainer = holidayInfoObtainer;
+    }
+
     @RequestMapping("/")
-    public String index(@RequestParam("firstCountryCode") String firstCountryCode,
-                        @RequestParam("secondCountryCode") String secondCountryCode,
-                        @RequestParam @DateTimeFormat(pattern=BlueHolidaysConfig.INPUT_DATE_FORMAT) Date date) {
+    public HolidayInfo index(@RequestParam("firstCountryCode") String firstCountryCode,
+                             @RequestParam("secondCountryCode") String secondCountryCode,
+                             @RequestParam @DateTimeFormat(pattern=BlueHolidaysConfig.INPUT_DATE_FORMAT) Date date) {
         logger.info(firstCountryCode);
         logger.info(secondCountryCode);
         logger.info(date.toString());
 
-        return date.toString();
+        return this.holidayInfoObtainer.get(firstCountryCode, secondCountryCode, date);
     }
 }
