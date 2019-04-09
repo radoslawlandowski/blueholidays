@@ -7,13 +7,13 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 /**
- * Service that uses holidayapi.pl as holiday info source.
+ * Dummy service that generates dummy HolidayInfo.
  */
-@Service("HolidayApiPlObtainer")
-@Qualifier("HolidayApiPlObtainer")
-public class HolidayApiPlObtainer implements HolidayInfoObtainer {
+@Service("DummyObtainer")
+@Qualifier("DummyObtainer")
+public class DummyObtainer implements HolidayInfoObtainer {
     @Override
     public HolidayInfo get(String firstCountryName, String secondCountryName, Date date) {
-        return new HolidayInfo(new Date(), "HOLIDAYAPI", "EU");
+        return new HolidayInfo(new Date(), "PL", "EU");
     }
 }

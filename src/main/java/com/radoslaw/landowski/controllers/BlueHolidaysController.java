@@ -5,6 +5,7 @@ import com.radoslaw.landowski.model.HolidayInfo;
 import com.radoslaw.landowski.service.HolidayInfoObtainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +19,7 @@ public class BlueHolidaysController {
 
     private HolidayInfoObtainer holidayInfoObtainer;
 
-    public BlueHolidaysController(HolidayInfoObtainer holidayInfoObtainer) {
+    public BlueHolidaysController(@Qualifier("HolidayApiPlObtainer") HolidayInfoObtainer holidayInfoObtainer) {
         this.holidayInfoObtainer = holidayInfoObtainer;
     }
 
