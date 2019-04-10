@@ -6,17 +6,18 @@ import java.time.format.DateTimeFormatter;
 public class CalendarificComDate {
     public static final String DATE_FORMAT = "yyyy-MM-dd";
 
-    private String iso;
+    private LocalDate iso;
     private CalendarificComDateTime dateTime;
 
     public CalendarificComDate() { }
 
     public LocalDate getIso() {
-        return LocalDate.parse(this.iso, DateTimeFormatter.ofPattern(DATE_FORMAT));
+        return this.iso;
     }
 
     public void setIso(String iso) {
-        this.iso = iso;
+        // TODO: Implement a proper date sanitizer/normalizer due to multiple date format returned from api
+        this.iso = LocalDate.parse(iso.substring(0, 10), DateTimeFormatter.ofPattern(DATE_FORMAT));
     }
 
     public CalendarificComDateTime getDateTime() {

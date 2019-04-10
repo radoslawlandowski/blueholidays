@@ -3,6 +3,7 @@ package com.radoslaw.landowski.service.obtainers.calendarificcom;
 import com.radoslaw.landowski.model.HolidayInfo;
 import com.radoslaw.landowski.service.obtainers.HolidayInfoObtainer;
 import com.radoslaw.landowski.service.obtainers.calendarificcom.model.CalendarificComApiResponse;
+import com.radoslaw.landowski.service.obtainers.calendarificcom.model.CalendarificComHoliday;
 import com.radoslaw.landowski.service.obtainers.holidayapipl.HolidayApiPlResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Service that uses calendarific.com as holiday info source.
@@ -40,10 +43,36 @@ public class CalendarificComObtainer implements HolidayInfoObtainer {
 
     @Override
     public HolidayInfo get(String firstCountryCode, String secondCountryCode, LocalDate date) {
-        CalendarificComApiResponse firstCountryHolidays = getHolidayInfo(firstCountryCode, date);
-        CalendarificComApiResponse secondCountryHolidays = null;
+        CalendarificComApiResponse firstCountryHolidaysInfo = getHolidayInfo(firstCountryCode, date);
+        List<CalendarificComHoliday> firstCountryHolidays = firstCountryHolidaysInfo.getResponse().getHolidays()
+                .stream()
+                .filter(holiday -> holiday.getDate().getIso().isAfter(date))
+                .sorted(Comparator.comparing(h -> h.getDate().getIso()))
+                .collect(Collectors.toList());
 
-        return new HolidayInfo(firstCountryHolidays.getResponse().getHolidays().get(0).getDate().getIso(),"asd", "asd");
+        CalendarificComApiResponse secondCountryHolidaysInfo = getHolidayInfo(secondCountryCode, date);
+        List<CalendarificComHoliday> secondCountryHolidays = secondCountryHolidaysInfo.getResponse().getHolidays()
+                .stream()
+                .filter(holiday -> holiday.getDate().getIso().isAfter(date))
+                .sorted(Comparator.comparing(h -> h.getDate().getIso()))
+                .collect(Collectors.toList());
+
+        HolidayInfo commonHolidays = null;
+
+        for (int i = 0 ; i < firstCountryHolidays.size() && commonHolidays == null; i++) {
+            for (int j = 0 ; j < secondCountryHolidays.size() && commonHolidays == null; j++) {
+                if(firstCountryHolidays.get(i).getDate().getIso().isEqual(secondCountryHolidays.get(j).getDate().getIso())) {
+                    CalendarificComHoliday firstCountryHoliday = firstCountryHolidays.get(i);
+                    CalendarificComHoliday secondCountryHoliday = secondCountryHolidays.get(j);
+
+                    commonHolidays = new HolidayInfo(firstCountryHoliday.getDate().getIso(), firstCountryHoliday.getName(), secondCountryHoliday.getName());
+
+                    break;
+                }
+            }
+        }
+
+        return commonHolidays;
     }
 
     private CalendarificComApiResponse getHolidayInfo(String countryCode, LocalDate date) {
