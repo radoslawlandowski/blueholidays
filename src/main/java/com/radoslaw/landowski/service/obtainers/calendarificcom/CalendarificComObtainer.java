@@ -4,7 +4,6 @@ import com.radoslaw.landowski.model.HolidayInfo;
 import com.radoslaw.landowski.service.obtainers.HolidayInfoObtainer;
 import com.radoslaw.landowski.service.obtainers.calendarificcom.model.CalendarificComApiResponse;
 import com.radoslaw.landowski.service.obtainers.calendarificcom.model.CalendarificComHoliday;
-import com.radoslaw.landowski.service.obtainers.holidayapipl.HolidayApiPlResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -43,39 +42,39 @@ public class CalendarificComObtainer implements HolidayInfoObtainer {
 
     @Override
     public HolidayInfo get(String firstCountryCode, String secondCountryCode, LocalDate date) {
-        CalendarificComApiResponse firstCountryHolidaysInfo = getHolidayInfo(firstCountryCode, date);
-        List<CalendarificComHoliday> firstCountryHolidays = firstCountryHolidaysInfo.getResponse().getHolidays()
-                .stream()
-                .filter(holiday -> holiday.getDate().getIso().isAfter(date))
-                .sorted(Comparator.comparing(h -> h.getDate().getIso()))
-                .collect(Collectors.toList());
+        CalendarificComApiResponse firstCountryHolidaysResponse = getHolidayResponse(firstCountryCode, date);
+        List<CalendarificComHoliday> firstCountryHolidays = getSortedHolidaysAfter(firstCountryHolidaysResponse, date);
 
-        CalendarificComApiResponse secondCountryHolidaysInfo = getHolidayInfo(secondCountryCode, date);
-        List<CalendarificComHoliday> secondCountryHolidays = secondCountryHolidaysInfo.getResponse().getHolidays()
-                .stream()
-                .filter(holiday -> holiday.getDate().getIso().isAfter(date))
-                .sorted(Comparator.comparing(h -> h.getDate().getIso()))
-                .collect(Collectors.toList());
+        CalendarificComApiResponse secondCountryHolidaysResponse = getHolidayResponse(secondCountryCode, date);
+        List<CalendarificComHoliday> secondCountryHolidays = getSortedHolidaysAfter(secondCountryHolidaysResponse, date);
 
-        HolidayInfo commonHolidays = null;
+        return findNearestCommonHolidays(firstCountryHolidays, secondCountryHolidays).orElse(null);
+    }
 
-        for (int i = 0 ; i < firstCountryHolidays.size() && commonHolidays == null; i++) {
-            for (int j = 0 ; j < secondCountryHolidays.size() && commonHolidays == null; j++) {
+    private Optional<HolidayInfo> findNearestCommonHolidays(List<CalendarificComHoliday> firstCountryHolidays, List<CalendarificComHoliday> secondCountryHolidays) {
+        for (int i = 0 ; i < firstCountryHolidays.size(); i++) {
+            for (int j = 0 ; j < secondCountryHolidays.size(); j++) {
                 if(firstCountryHolidays.get(i).getDate().getIso().isEqual(secondCountryHolidays.get(j).getDate().getIso())) {
                     CalendarificComHoliday firstCountryHoliday = firstCountryHolidays.get(i);
                     CalendarificComHoliday secondCountryHoliday = secondCountryHolidays.get(j);
 
-                    commonHolidays = new HolidayInfo(firstCountryHoliday.getDate().getIso(), firstCountryHoliday.getName(), secondCountryHoliday.getName());
-
-                    break;
+                    return Optional.of(new HolidayInfo(firstCountryHoliday.getDate().getIso(), firstCountryHoliday.getName(), secondCountryHoliday.getName()));
                 }
             }
         }
 
-        return commonHolidays;
+        return Optional.empty();
     }
 
-    private CalendarificComApiResponse getHolidayInfo(String countryCode, LocalDate date) {
+    private List<CalendarificComHoliday> getSortedHolidaysAfter(CalendarificComApiResponse response, LocalDate date) {
+        return response.getResponse().getHolidays()
+                .stream()
+                .filter(holiday -> holiday.getDate().getIso().isAfter(date))
+                .sorted(Comparator.comparing(h -> h.getDate().getIso()))
+                .collect(Collectors.toList());
+    }
+
+    private CalendarificComApiResponse getHolidayResponse(String countryCode, LocalDate date) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(this.baseUrl)
                 .queryParam("country", countryCode)
                 .queryParam("year", date.getYear())

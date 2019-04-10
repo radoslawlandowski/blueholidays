@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -29,10 +30,11 @@ public class BlueHolidaysApplicationTests {
 	private MockMvc mvc;
 
 	@Test
-	public void works() throws Exception {
-		this.mvc.perform(get("/?firstCountryCode=PL&secondCountryCode=EU&date=2012-11-01"))
+	public void calendarificWorks() throws Exception {
+		this.mvc.perform(get("/?firstCountryCode=PL&secondCountryCode=DE&date=2012-11-01"))
 				.andDo(print())
-				.andExpect(status().isOk());
+				.andExpect(status().isOk())
+				.andExpect(content().string("{\"date\":\"2012-11-11\",\"firstCountryHolidayName\":\"Independence Day\",\"secondCountryHolidayName\":\"St. Martin's Day\"}"));
 	}
 
 }
