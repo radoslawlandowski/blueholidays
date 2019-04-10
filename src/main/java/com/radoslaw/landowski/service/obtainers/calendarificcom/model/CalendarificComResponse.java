@@ -1,18 +1,16 @@
 package com.radoslaw.landowski.service.obtainers.calendarificcom.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class CalendarificComResponse {
-    List<CalendarificComHoliday> holidays;
-
-    public CalendarificComResponse() {
-    }
-
-    public List<CalendarificComHoliday> getHolidays() {
-        return holidays;
-    }
-
-    public void setHolidays(List<CalendarificComHoliday> holidays) {
-        this.holidays = holidays;
-    }
+    private List<CalendarificComHoliday> holidays;
 }

@@ -1,15 +1,20 @@
 package com.radoslaw.landowski.service.obtainers.calendarificcom.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CalendarificComDate {
     public static final String DATE_FORMAT = "yyyy-MM-dd";
 
     private LocalDate iso;
     private CalendarificComDateTime dateTime;
-
-    public CalendarificComDate() { }
 
     public LocalDate getIso() {
         return this.iso;

@@ -2,6 +2,7 @@ package com.radoslaw.landowski.service.obtainers.holidayapipl;
 
 import com.radoslaw.landowski.model.HolidayInfo;
 import com.radoslaw.landowski.service.obtainers.HolidayInfoObtainer;
+import com.radoslaw.landowski.service.obtainers.holidayapipl.model.HolidayApiPlResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;

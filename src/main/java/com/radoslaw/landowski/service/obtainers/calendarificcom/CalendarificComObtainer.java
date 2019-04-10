@@ -43,9 +43,9 @@ public class CalendarificComObtainer implements HolidayInfoObtainer {
     @Override
     public HolidayInfo get(String firstCountryCode, String secondCountryCode, LocalDate date) {
         CalendarificComApiResponse firstCountryHolidaysResponse = getHolidayResponse(firstCountryCode, date);
-        List<CalendarificComHoliday> firstCountryHolidays = getSortedHolidaysAfter(firstCountryHolidaysResponse, date);
-
         CalendarificComApiResponse secondCountryHolidaysResponse = getHolidayResponse(secondCountryCode, date);
+
+        List<CalendarificComHoliday> firstCountryHolidays = getSortedHolidaysAfter(firstCountryHolidaysResponse, date);
         List<CalendarificComHoliday> secondCountryHolidays = getSortedHolidaysAfter(secondCountryHolidaysResponse, date);
 
         return findNearestCommonHolidays(firstCountryHolidays, secondCountryHolidays).orElse(null);
@@ -67,6 +67,8 @@ public class CalendarificComObtainer implements HolidayInfoObtainer {
     }
 
     private List<CalendarificComHoliday> getSortedHolidaysAfter(CalendarificComApiResponse response, LocalDate date) {
+        LOGGER.debug("Getting sorted holidays occurring after {}", date);
+
         return response.getResponse().getHolidays()
                 .stream()
                 .filter(holiday -> holiday.getDate().getIso().isAfter(date))
@@ -80,10 +82,9 @@ public class CalendarificComObtainer implements HolidayInfoObtainer {
                 .queryParam("year", date.getYear())
                 .queryParam("api_key", String.valueOf(this.apiKey));
 
-
         String uriString = builder.toUriString();
 
-        LOGGER.info("Executing HTTP request with URI: {}", uriString);
+        LOGGER.debug("Executing HTTP request with URI: {}", uriString);
 
         return restTemplate.exchange(
                 uriString,

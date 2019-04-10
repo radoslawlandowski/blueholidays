@@ -1,4 +1,4 @@
-package com.radoslaw.landowski.service.obtainers.holidayapipl;
+package com.radoslaw.landowski.service.obtainers.holidayapipl.model;
 
 import java.util.List;
 

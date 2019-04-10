@@ -1,7 +1,10 @@
 package com.radoslaw.landowski.model;
 
+import lombok.EqualsAndHashCode;
+
 import java.time.LocalDate;
 
+@EqualsAndHashCode
 public class HolidayInfo {
     private LocalDate date;
     private String firstCountryHolidayName;
