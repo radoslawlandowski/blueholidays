@@ -19,7 +19,7 @@ public class BlueHolidaysController {
 
     private HolidayInfoObtainer holidayInfoObtainer;
 
-    public BlueHolidaysController(@Qualifier("HolidayApiPlObtainer") HolidayInfoObtainer holidayInfoObtainer) {
+    public BlueHolidaysController(@Qualifier("CalendarificComObtainer") HolidayInfoObtainer holidayInfoObtainer) {
         this.holidayInfoObtainer = holidayInfoObtainer;
     }
 

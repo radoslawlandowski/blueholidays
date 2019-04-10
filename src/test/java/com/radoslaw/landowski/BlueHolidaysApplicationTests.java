@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource(properties = {
-		"app.application-name=testValue",
+	"app.application-name=testValue",
 })
 public class BlueHolidaysApplicationTests {
 
@@ -30,7 +30,7 @@ public class BlueHolidaysApplicationTests {
 
 	@Test
 	public void works() throws Exception {
-		this.mvc.perform(get("/"))
+		this.mvc.perform(get("/?firstCountryCode=PL&secondCountryCode=EU&date=2012-11-01"))
 				.andDo(print())
 				.andExpect(status().isOk());
 	}
