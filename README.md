@@ -99,4 +99,5 @@ I did find any chalenge or value in iterating to next years.
 The main response object (HolidayInfo) is surrounded with envelope (HolidayInfoResponse). It allows api response to be more consistent when no common holidays are found.
 During development I made a few specific decisions. Each of these is commented and prefixed with "!REVIEW" string. Just look for "!REVIEW" in project files
 to find them.
-
+I assumed to accept only ISO-3166 Country codes as request params as they are easily obtainable with java.lang package. They are also compliant with main Obtainer: Calendirific.com
+It would be perfect to fetch on app startup (and refresh periodically) the list of currently supported countries in Calendarific but they don't expose such endpoint.
