@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  api:
+    build: .
+    restart: always
+    ports:
+      - 8014:8082
+    environment:
+      - BH_APP_CAL_API_KEY=${BH_APP_CAL_API_KEY}
+      - BH_APP_PORT=8082

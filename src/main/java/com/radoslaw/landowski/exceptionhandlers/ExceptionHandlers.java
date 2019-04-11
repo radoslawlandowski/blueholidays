@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -44,6 +45,16 @@ public class ExceptionHandlers {
         log(exception);
 
         return new ResponseEntity<>(response, null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(MissingServletRequestParameterException exception) {
+        ErrorResponse response = ErrorResponse.builder().description("Missing mandatory parameters!").build();
+        response.addProblem(exception.getParameterName(), exception.getMessage());
+
+        log(exception);
+
+        return new ResponseEntity<>(response, null, HttpStatus.BAD_REQUEST);
     }
 
     private void log(Throwable exception) {
