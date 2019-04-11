@@ -1,23 +1,20 @@
 package com.radoslaw.landowski.service.obtainers.holidayapipl.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class Holiday {
     public static final String DATE_FORMAT = "yyyy-MM-dd";
 
     private String name;
     private String country;
     private String date;
-
-    public Holiday() {
-    }
-
-    public Holiday(String name, String country, String date) {
-        this.name = name;
-        this.country = country;
-        this.date = date;
-    }
 
     public String getName() {
         return name;
