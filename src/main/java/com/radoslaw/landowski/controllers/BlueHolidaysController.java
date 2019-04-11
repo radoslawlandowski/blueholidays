@@ -1,7 +1,8 @@
 package com.radoslaw.landowski.controllers;
 
 import com.radoslaw.landowski.config.BlueHolidaysConfig;
-import com.radoslaw.landowski.model.HolidayInfo;
+import com.radoslaw.landowski.exceptions.HolidayObtainingException;
+import com.radoslaw.landowski.model.HolidayInfoResponse;
 import com.radoslaw.landowski.service.obtainers.HolidayInfoObtainer;
 import com.radoslaw.landowski.validators.ISOCountryCode;
 import org.slf4j.Logger;
@@ -26,15 +27,16 @@ public class BlueHolidaysController {
     }
 
     @RequestMapping("/")
-    public HolidayInfo getHolidayInfo(@RequestParam("firstCountryCode") @ISOCountryCode String firstCountryCode,
-                                      @RequestParam("secondCountryCode") @ISOCountryCode String secondCountryCode,
-                                      @RequestParam @NotNull @DateTimeFormat(pattern=BlueHolidaysConfig.INPUT_DATE_FORMAT) LocalDate date) {
+    public HolidayInfoResponse getHolidayInfo(@RequestParam("firstCountryCode") @ISOCountryCode String firstCountryCode,
+                                              @RequestParam("secondCountryCode") @ISOCountryCode String secondCountryCode,
+                                              @RequestParam @NotNull @DateTimeFormat(pattern=BlueHolidaysConfig.INPUT_DATE_FORMAT) LocalDate date)
+    throws HolidayObtainingException {
 
         LOGGER.info("Requested for obtaining holiday info with: 'firstCountryCode': {}, secondCountryCode: {}, date: {}",
                 firstCountryCode,
                 secondCountryCode,
                 date.toString());
 
-        return this.holidayInfoObtainer.get(firstCountryCode, secondCountryCode, date);
+        return HolidayInfoResponse.builder().holidayInfo(holidayInfoObtainer.get(firstCountryCode, secondCountryCode, date)).build();
     }
 }

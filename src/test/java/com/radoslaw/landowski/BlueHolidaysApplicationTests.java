@@ -25,7 +25,15 @@ public class BlueHolidaysApplicationTests {
 		this.mvc.perform(get("/?firstCountryCode=PL&secondCountryCode=DE&date=2012-11-01"))
 				.andDo(print())
 				.andExpect(status().isOk())
-				.andExpect(content().string("{\"date\":\"2012-11-11\",\"firstCountryHolidayName\":\"Independence Day\",\"secondCountryHolidayName\":\"St. Martin's Day\"}"));
+				.andExpect(content().string("{\"holidayInfo\":{\"date\":\"2012-11-11\",\"firstCountryHolidayName\":\"Independence Day\",\"secondCountryHolidayName\":\"St. Martin's Day\"}}"));
+	}
+
+	@Test
+	public void gettingHolidayInfoWithValidArgumentsButNoHolidaysFoundReturnsProperBody() throws Exception {
+		this.mvc.perform(get("/?firstCountryCode=PL&secondCountryCode=PL&date=2012-12-31"))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(content().string("{\"holidayInfo\":null}"));
 	}
 
 	@Test

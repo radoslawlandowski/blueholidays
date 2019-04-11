@@ -1,5 +1,6 @@
 package com.radoslaw.landowski.exceptionhandlers;
 
+import com.radoslaw.landowski.exceptions.HolidayObtainingException;
 import com.radoslaw.landowski.model.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +19,7 @@ public class ExceptionHandlers {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException exception) {
-        ErrorResponse response = new ErrorResponse();
-        response.setDescription("Constraint violations!");
+        ErrorResponse response = ErrorResponse.builder().description("Constraint violations!").build();
         exception.getConstraintViolations().forEach(conVio -> response.addProblem(conVio.getInvalidValue().toString(), conVio.getMessage()));
 
         log(exception);
@@ -29,13 +29,21 @@ public class ExceptionHandlers {
 
     @ExceptionHandler(ConversionFailedException.class)
     public ResponseEntity<ErrorResponse> handleConversionFailedException(ConversionFailedException exception) {
-        ErrorResponse response = new ErrorResponse();
-        response.setDescription("Conversion Failure!");
+        ErrorResponse response = ErrorResponse.builder().description("Conversion Failure!").build();
         response.addProblem(exception.getValue().toString(), exception.getCause().getLocalizedMessage());
 
         log(exception);
 
         return new ResponseEntity<>(response, null, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HolidayObtainingException.class)
+    public ResponseEntity<ErrorResponse> handleBlueHolidaysException(HolidayObtainingException exception) {
+        ErrorResponse response = ErrorResponse.builder().description("Internal Server Error!").build();
+
+        log(exception);
+
+        return new ResponseEntity<>(response, null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private void log(Throwable exception) {

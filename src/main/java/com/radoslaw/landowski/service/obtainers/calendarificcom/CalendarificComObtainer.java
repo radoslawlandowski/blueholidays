@@ -1,5 +1,6 @@
 package com.radoslaw.landowski.service.obtainers.calendarificcom;
 
+import com.radoslaw.landowski.exceptions.HolidayObtainingException;
 import com.radoslaw.landowski.model.HolidayInfo;
 import com.radoslaw.landowski.service.obtainers.HolidayInfoObtainer;
 import com.radoslaw.landowski.service.obtainers.calendarificcom.model.CalendarificComApiResponse;
@@ -41,7 +42,7 @@ public class CalendarificComObtainer implements HolidayInfoObtainer {
     }
 
     @Override
-    public HolidayInfo get(String firstCountryCode, String secondCountryCode, LocalDate date) {
+    public HolidayInfo get(String firstCountryCode, String secondCountryCode, LocalDate date) throws HolidayObtainingException {
         CalendarificComApiResponse firstCountryHolidaysResponse = getHolidayResponse(firstCountryCode, date);
         CalendarificComApiResponse secondCountryHolidaysResponse = getHolidayResponse(secondCountryCode, date);
 
@@ -76,7 +77,7 @@ public class CalendarificComObtainer implements HolidayInfoObtainer {
                 .collect(Collectors.toList());
     }
 
-    private CalendarificComApiResponse getHolidayResponse(String countryCode, LocalDate date) {
+    private CalendarificComApiResponse getHolidayResponse(String countryCode, LocalDate date) throws HolidayObtainingException {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(this.baseUrl)
                 .queryParam("country", countryCode)
                 .queryParam("year", date.getYear())
@@ -86,11 +87,18 @@ public class CalendarificComObtainer implements HolidayInfoObtainer {
 
         LOGGER.debug("Executing HTTP request with URI: {}", uriString);
 
-        return restTemplate.exchange(
-                uriString,
-                HttpMethod.GET,
-                this.httpEntity,
-                CalendarificComApiResponse.class).getBody();
+        CalendarificComApiResponse response;
+        try {
+            response = restTemplate.exchange(
+                    uriString,
+                    HttpMethod.GET,
+                    this.httpEntity,
+                    CalendarificComApiResponse.class).getBody();
+        } catch(Exception e) {
+            throw new HolidayObtainingException(e);
+        }
+
+        return response;
     }
 
     private HttpEntity buildHttpEntity() {
