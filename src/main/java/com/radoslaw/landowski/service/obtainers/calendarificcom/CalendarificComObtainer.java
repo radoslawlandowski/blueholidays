@@ -21,7 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Service that uses calendarific.com as holiday info source.
+ * Service that uses calendarific.com as holiday info source. Calendarific returns holidays for a given country
  */
 @Service("CalendarificComObtainer")
 @Qualifier("CalendarificComObtainer")
@@ -34,7 +34,6 @@ public class CalendarificComObtainer implements HolidayInfoObtainer {
     private HttpEntity httpEntity;
 
     public CalendarificComObtainer(RestTemplate restTemplate, CalendarificComConfig config) {
-        LOGGER.debug("Initializing {}", CalendarificComObtainer.class);
         this.baseUrl = config.getBaseUrl();
         this.apiKey = config.getApiKey().toCharArray();
         this.restTemplate = restTemplate;

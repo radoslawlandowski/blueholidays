@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.validation.ConstraintViolationException;
 
+/**
+ * Class contains exception handlers for input parameters existence and validation but also inner exception.
+ * Due to simplicty of these handlers they've been all put in the same class.
+ */
 @ControllerAdvice
 public class ExceptionHandlers {
 
@@ -38,6 +42,10 @@ public class ExceptionHandlers {
         return new ResponseEntity<>(response, null, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * @param exception
+     * @return general error message that is returned to the user. Protects from leaking sensitive stack traces to users
+     */
     @ExceptionHandler(HolidayObtainingException.class)
     public ResponseEntity<ErrorResponse> handleBlueHolidaysException(HolidayObtainingException exception) {
         ErrorResponse response = ErrorResponse.builder().description("Internal Server Error!").build();

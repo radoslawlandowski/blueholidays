@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A base class returned for non-successful requests, ie: validation errors, server error etc.
+ */
 @Data
 @Builder
 @AllArgsConstructor

@@ -26,6 +26,15 @@ public class BlueHolidaysController {
         this.holidayInfoObtainer = holidayInfoObtainer;
     }
 
+    /**
+     * @param firstCountryCode ISO-3166 country code to get common holidays for
+     * @param secondCountryCode ISO-3166 country code to get common holidays for
+     * @param date the date from which common holiday search starts
+     * @return searches within the year taken from 'date'
+ *             returns the nearest holiday names that happen in both countries in the same day past the given 'date'.
+     *         returns 'null' if no commmon holidays are found for the given year in 'date'.
+     * @throws HolidayObtainingException
+     */
     @RequestMapping("/")
     public HolidayInfoResponse getHolidayInfo(@RequestParam("firstCountryCode") @ISOCountryCode String firstCountryCode,
                                               @RequestParam("secondCountryCode") @ISOCountryCode String secondCountryCode,

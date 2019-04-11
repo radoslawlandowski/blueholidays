@@ -17,8 +17,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.time.LocalDate;
 
 /**
- * Service that uses holidayapi.pl as holiday info source.
+ * Service that uses holidayapi.pl as holiday info source. This is a secondary implementation made for showing the flexibility of
+ * the general app mechanism. Although it works, it's deprecated due to necesity of making multiple requests. The
+ * holidayapi.pl is only showing the next closest holidays instead of all of them for the given year
  */
+@Deprecated
 @Service("HolidayApiPlObtainer")
 @Qualifier("HolidayApiPlObtainer")
 public class HolidayApiPlObtainer implements HolidayInfoObtainer {

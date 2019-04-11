@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Holiday {
+    //
     public static final String DATE_FORMAT = "yyyy-MM-dd";
 
     private String name;
