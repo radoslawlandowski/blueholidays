@@ -1,0 +1,44 @@
+{
+	"info": {
+		"_postman_id": "76ad1e8c-f61e-4191-966e-7f09bb9ed813",
+		"name": "blueholidays",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get holidays info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/?firstCountryCode=PL&secondCountryCode=DE&date=2012-01-01",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						""
+					],
+					"query": [
+						{
+							"key": "firstCountryCode",
+							"value": "PL"
+						},
+						{
+							"key": "secondCountryCode",
+							"value": "DE"
+						},
+						{
+							"key": "date",
+							"value": "2012-01-01"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

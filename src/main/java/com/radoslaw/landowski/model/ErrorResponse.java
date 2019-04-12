@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A base class returned for non-successful requests, ie: validation errors, server error etc.
+ */
 @Data
 @Builder
 @AllArgsConstructor
@@ -25,7 +28,7 @@ public class ErrorResponse {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public class Problem {
+    public static class Problem {
         private String value;
         private String details;
     }
