@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -16,18 +17,21 @@ public class CalendarificComDate {
     */
     public static final String DATE_FORMAT = "yyyy-MM-dd";
 
+    @NotNull
     private LocalDate iso;
+
     private CalendarificComDateTime dateTime;
 
     public LocalDate getIso() {
         return this.iso;
     }
 
-    // !REVIEW: Although these model classes are supposed to be as logicless as possible I simply find it easy, convenient
-    // and comfortable to convert the dates in this setter. It makes the life easier and code cleaner.
+    /* !REVIEW: Although these model classes are supposed to be as logicless as possible I simply find it easy, convenient
+    * and comfortable to convert the dates in this setter. It makes the life easier and code cleaner.
+    * THe input string must be substringed because API sometimes returns date as: "yyyy-MM-dd" and sometimes "yyyy-MM-dd:hh:mm:ss"
+    */
     public void setIso(String iso) {
-        // TODO: Implement a proper date sanitizer/normalizer due to multiple date format returned from api
-        this.iso = LocalDate.parse(iso.substring(0, 10), DateTimeFormatter.ofPattern(DATE_FORMAT));
+        this.iso = LocalDate.parse(iso.substring(0, DATE_FORMAT.length()), DateTimeFormatter.ofPattern(DATE_FORMAT));
     }
 
     public CalendarificComDateTime getDateTime() {
