@@ -101,3 +101,9 @@ During development I made a few specific decisions. Each of these is commented a
 to find them.
 I assumed to accept only ISO-3166 Country codes as request params as they are easily obtainable with java.lang package. They are also compliant with main Obtainer: Calendirific.com
 It would be perfect to fetch on app startup (and refresh periodically) the list of currently supported countries in Calendarific but they don't expose such endpoint.
+
+# What's left to improve?
+- Optimizing Lambda cold starts (described here: https://github.com/awslabs/aws-serverless-java-container/wiki/Quick-start---Spring)
+- More unit tests
+- For even bigger parametrization the 'obtainer' implementation could be set in config and then dynamically instantiated from Spring context.
+Right now implementation is hardcoded in @Qualifier() annotation in controller.
