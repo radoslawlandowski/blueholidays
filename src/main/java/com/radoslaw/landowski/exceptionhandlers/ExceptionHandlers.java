@@ -19,12 +19,16 @@ import javax.validation.ConstraintViolationException;
  */
 @ControllerAdvice
 public class ExceptionHandlers {
-
     private final static Logger LOGGER = LoggerFactory.getLogger(ExceptionHandlers.class);
+
+    public final static String CONSTRAINT_VILOATION_DESCRIPTION = "Constraint violations!";
+    public final static String CONVERSION_FAILED_DESCRIPTION = "Conversion Failure!";
+    public final static String INTERNAL_SERVER_ERROR_DESCRIPTION = "Internal Server Error!";
+    public final static String MISSING_PARAMETER_DESCRIPTION = "Missing mandatory parameters!";
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException exception) {
-        ErrorResponse response = ErrorResponse.builder().description("Constraint violations!").build();
+        ErrorResponse response = ErrorResponse.builder().description(CONSTRAINT_VILOATION_DESCRIPTION).build();
         exception.getConstraintViolations().forEach(conVio -> response.addProblem(conVio.getInvalidValue().toString(), conVio.getMessage()));
 
         log(exception);
@@ -34,7 +38,7 @@ public class ExceptionHandlers {
 
     @ExceptionHandler(ConversionFailedException.class)
     public ResponseEntity<ErrorResponse> handleConversionFailedException(ConversionFailedException exception) {
-        ErrorResponse response = ErrorResponse.builder().description("Conversion Failure!").build();
+        ErrorResponse response = ErrorResponse.builder().description(CONVERSION_FAILED_DESCRIPTION).build();
         response.addProblem(exception.getValue().toString(), exception.getCause().getLocalizedMessage());
 
         log(exception);
@@ -48,7 +52,7 @@ public class ExceptionHandlers {
      */
     @ExceptionHandler(HolidayObtainingException.class)
     public ResponseEntity<ErrorResponse> handleBlueHolidaysException(HolidayObtainingException exception) {
-        ErrorResponse response = ErrorResponse.builder().description("Internal Server Error!").build();
+        ErrorResponse response = ErrorResponse.builder().description(INTERNAL_SERVER_ERROR_DESCRIPTION).build();
 
         log(exception);
 
@@ -57,7 +61,7 @@ public class ExceptionHandlers {
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(MissingServletRequestParameterException exception) {
-        ErrorResponse response = ErrorResponse.builder().description("Missing mandatory parameters!").build();
+        ErrorResponse response = ErrorResponse.builder().description(MISSING_PARAMETER_DESCRIPTION).build();
         response.addProblem(exception.getParameterName(), exception.getMessage());
 
         log(exception);

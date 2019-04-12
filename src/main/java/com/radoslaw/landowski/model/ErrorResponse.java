@@ -28,7 +28,7 @@ public class ErrorResponse {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public class Problem {
+    public static class Problem {
         private String value;
         private String details;
     }

@@ -1,5 +1,8 @@
 package com.radoslaw.landowski;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.radoslaw.landowski.exceptionhandlers.ExceptionHandlers;
+import com.radoslaw.landowski.model.ErrorResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +11,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -19,6 +26,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class BlueHolidaysApplicationTests {
 	@Autowired
 	private MockMvc mvc;
+
+	@Autowired
+	private ObjectMapper mapper;
 
 	@Test
 	public void gettingHolidayInfoWithValidArgumentsReturnsProperBody() throws Exception {
@@ -37,15 +47,31 @@ public class BlueHolidaysApplicationTests {
 	}
 
 	@Test
-	public void gettingHolidayInfoWithInValidCountryCodeReturns4xxCode() throws Exception {
+	public void gettingHolidayInfoWithInValidSecondCountryCodeReturns4xx() throws Exception {
 		String unsupportedCountryCode = "BROKEN!!!!CODE";
-		this.mvc.perform(get(String.format("/?firstCountryCode=PL&secondCountryCode=%s&date=2012-11-01", unsupportedCountryCode)))
+		String response = this.mvc.perform(get(String.format("/?firstCountryCode=PL&secondCountryCode=%s&date=2012-11-01", unsupportedCountryCode)))
 				.andDo(print())
-				.andExpect(status().is4xxClientError());
+				.andExpect(status().is4xxClientError()).andReturn().getResponse().getContentAsString();
+        ErrorResponse errorResponse = mapper.readValue(response, ErrorResponse.class);
 
-		this.mvc.perform(get(String.format("/?firstCountryCode=%s&secondCountryCode=PL&date=2012-11-01", unsupportedCountryCode)))
+        assertEquals(ExceptionHandlers.CONSTRAINT_VILOATION_DESCRIPTION, errorResponse.getDescription());
+        List<ErrorResponse.Problem> problems = errorResponse.getProblems();
+        assertEquals(1, problems.size());
+        assertEquals(unsupportedCountryCode, problems.get(0).getValue());
+	}
+
+	@Test
+	public void gettingHolidayInfoWithInValidFirstCountryCodeReturns4xx() throws Exception {
+		String unsupportedCountryCode = "BROKEN!!!!CODE";
+		String response = this.mvc.perform(get(String.format("/?firstCountryCode=%s&secondCountryCode=PL&date=2012-11-01", unsupportedCountryCode)))
 				.andDo(print())
-				.andExpect(status().is4xxClientError());
+				.andExpect(status().is4xxClientError()).andReturn().getResponse().getContentAsString();
+		ErrorResponse errorResponse = mapper.readValue(response, ErrorResponse.class);
+
+		assertEquals(ExceptionHandlers.CONSTRAINT_VILOATION_DESCRIPTION, errorResponse.getDescription());
+		List<ErrorResponse.Problem> problems = errorResponse.getProblems();
+		assertEquals(1, problems.size());
+		assertEquals(unsupportedCountryCode, problems.get(0).getValue());
 	}
 
 	@Test
