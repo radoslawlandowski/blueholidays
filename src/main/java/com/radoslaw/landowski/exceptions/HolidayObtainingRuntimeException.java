@@ -5,8 +5,8 @@ package com.radoslaw.landowski.exceptions;
  * Spring's ControllerAdvice annotated class called ExceptionHandlers. Thrown when external API throws it's own errors
  * due to timeouts, lack of authorization etc.
  */
-public class HolidayObtainingException extends Exception {
-    public HolidayObtainingException(Throwable cause) {
+public class HolidayObtainingRuntimeException extends RuntimeException {
+    public HolidayObtainingRuntimeException(Throwable cause) {
         super(cause);
     }
 }

@@ -1,6 +1,6 @@
 package com.radoslaw.landowski.service.obtainers.calendarificcom;
 
-import com.radoslaw.landowski.exceptions.HolidayObtainingException;
+import com.radoslaw.landowski.exceptions.HolidayObtainingRuntimeException;
 import com.radoslaw.landowski.model.HolidayInfo;
 import com.radoslaw.landowski.service.obtainers.calendarificcom.model.CalendarificComApiResponse;
 import com.radoslaw.landowski.service.obtainers.calendarificcom.model.CalendarificComDate;
@@ -50,7 +50,7 @@ public class CalendarificComObtainerTests {
     }
 
     @Test
-    public void holidayInfoShouldBeReturnedForExistingHolidays() throws HolidayObtainingException {
+    public void holidayInfoShouldBeReturnedForExistingHolidays() throws HolidayObtainingRuntimeException {
         int year = 2012;
         String countryCode = "PL";
         String holidayName = "Holiday name";
@@ -68,7 +68,7 @@ public class CalendarificComObtainerTests {
     }
 
     @Test
-    public void nullShouldBeReturnedForNonExistingHolidays() throws HolidayObtainingException {
+    public void nullShouldBeReturnedForNonExistingHolidays() throws HolidayObtainingRuntimeException {
         int year = 2012;
         String countryCode = "PL";
         String expectedUrl = String.format("%s?country=%s&year=%d&api_key=%s", BASE_URL, countryCode, year, API_KEY);
@@ -83,7 +83,7 @@ public class CalendarificComObtainerTests {
         assertEquals(expectedInfo, actualInfo);
     }
 
-    private CalendarificComApiResponse getPrebuiltBasicApiResponse(LocalDate date, String name) throws HolidayObtainingException {
+    private CalendarificComApiResponse getPrebuiltBasicApiResponse(LocalDate date, String name) throws HolidayObtainingRuntimeException {
         CalendarificComApiResponse apiResponse = CalendarificComApiResponse.builder()
                 .response(CalendarificComResponse.builder().build()).build();
 

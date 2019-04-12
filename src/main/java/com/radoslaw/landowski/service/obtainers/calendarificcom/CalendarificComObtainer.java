@@ -1,6 +1,6 @@
 package com.radoslaw.landowski.service.obtainers.calendarificcom;
 
-import com.radoslaw.landowski.exceptions.HolidayObtainingException;
+import com.radoslaw.landowski.exceptions.HolidayObtainingRuntimeException;
 import com.radoslaw.landowski.model.HolidayInfo;
 import com.radoslaw.landowski.service.obtainers.HolidayInfoObtainer;
 import com.radoslaw.landowski.service.obtainers.calendarificcom.model.CalendarificComApiResponse;
@@ -19,6 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Service that uses calendarific.com as holiday info source. Calendarific returns holidays for a given country
@@ -41,14 +42,13 @@ public class CalendarificComObtainer implements HolidayInfoObtainer {
     }
 
     @Override
-    public HolidayInfo get(String firstCountryCode, String secondCountryCode, LocalDate date) throws HolidayObtainingException {
-        CalendarificComApiResponse firstCountryHolidaysResponse = getHolidayResponse(firstCountryCode, date);
-        CalendarificComApiResponse secondCountryHolidaysResponse = getHolidayResponse(secondCountryCode, date);
+    public HolidayInfo get(String firstCountryCode, String secondCountryCode, LocalDate date) throws HolidayObtainingRuntimeException {
+        List<List<CalendarificComHoliday>> holidays = Stream.of(firstCountryCode, secondCountryCode).parallel().map((code) -> {
+            CalendarificComApiResponse holidaysResponse = getHolidayResponse(code, date);
+            return getSortedHolidaysAfter(holidaysResponse, date);
+        }).collect(Collectors.toList());
 
-        List<CalendarificComHoliday> firstCountryHolidays = getSortedHolidaysAfter(firstCountryHolidaysResponse, date);
-        List<CalendarificComHoliday> secondCountryHolidays = getSortedHolidaysAfter(secondCountryHolidaysResponse, date);
-
-        return findNearestCommonHolidays(firstCountryHolidays, secondCountryHolidays).orElse(null);
+        return findNearestCommonHolidays(holidays.get(0), holidays.get(1)).orElse(null);
     }
 
     private Optional<HolidayInfo> findNearestCommonHolidays(List<CalendarificComHoliday> firstCountryHolidays, List<CalendarificComHoliday> secondCountryHolidays) {
@@ -67,7 +67,7 @@ public class CalendarificComObtainer implements HolidayInfoObtainer {
     }
 
     private List<CalendarificComHoliday> getSortedHolidaysAfter(CalendarificComApiResponse response, LocalDate date) {
-        LOGGER.debug("Getting sorted holidays occurring after {}", date);
+        LOGGER.info("Getting sorted holidays occurring after {}", date);
 
         return response.getResponse().getHolidays()
                 .stream()
@@ -76,7 +76,7 @@ public class CalendarificComObtainer implements HolidayInfoObtainer {
                 .collect(Collectors.toList());
     }
 
-    private CalendarificComApiResponse getHolidayResponse(String countryCode, LocalDate date) throws HolidayObtainingException {
+    private CalendarificComApiResponse getHolidayResponse(String countryCode, LocalDate date) throws HolidayObtainingRuntimeException {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(this.baseUrl)
                 .queryParam("country", countryCode)
                 .queryParam("year", date.getYear())
@@ -84,7 +84,7 @@ public class CalendarificComObtainer implements HolidayInfoObtainer {
 
         String uriString = builder.toUriString();
 
-        LOGGER.debug("Executing HTTP request with URI: {}", uriString);
+        LOGGER.info("Executing HTTP request with URI: {}", uriString);
 
         CalendarificComApiResponse response;
         try {
@@ -94,14 +94,14 @@ public class CalendarificComObtainer implements HolidayInfoObtainer {
                     this.httpEntity,
                     CalendarificComApiResponse.class).getBody();
         } catch(Exception e) {
-            throw new HolidayObtainingException(e);
+            throw new HolidayObtainingRuntimeException(e);
         }
 
         return response;
     }
 
     private HttpEntity buildHttpEntity() {
-        LOGGER.debug("Building http headers and http entity");
+        LOGGER.info("Building http headers and http entity");
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
