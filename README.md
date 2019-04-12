@@ -107,3 +107,8 @@ It would be perfect to fetch on app startup (and refresh periodically) the list 
 - More unit tests
 - For even bigger parametrization the 'obtainer' implementation could be set in config and then dynamically instantiated from Spring context.
 Right now implementation is hardcoded in @Qualifier() annotation in controller.
+- There should be more than one API KEY to be used: 
+    - Separate key for prod (aka for you or for Lambda)
+    - Separate key for development
+- Implement functional tests against application deployed in AWS
+- Some form of manifest file or tagging mechanism to distinguish deployed lambda packages.
