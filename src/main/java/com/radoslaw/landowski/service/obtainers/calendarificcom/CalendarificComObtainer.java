@@ -45,6 +45,9 @@ public class CalendarificComObtainer implements HolidayInfoObtainer {
     private Optional<HolidayInfo> findNearestCommonHolidays(List<CalendarificComHoliday> firstCountryHolidays, List<CalendarificComHoliday> secondCountryHolidays) {
         for (int i = 0 ; i < firstCountryHolidays.size(); i++) {
             for (int j = 0 ; j < secondCountryHolidays.size(); j++) {
+                if(secondCountryHolidays.get(j).getDate().getIso().isAfter(firstCountryHolidays.get(i).getDate().getIso())) {
+                    break; // If the second date is already after the first one there is no point to look for equality with further dates.
+                }
                 if(firstCountryHolidays.get(i).getDate().getIso().isEqual(secondCountryHolidays.get(j).getDate().getIso())) {
                     CalendarificComHoliday firstCountryHoliday = firstCountryHolidays.get(i);
                     CalendarificComHoliday secondCountryHoliday = secondCountryHolidays.get(j);
