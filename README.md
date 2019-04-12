@@ -69,10 +69,10 @@ Development is done in feature branches, branch naming convention:
 # How to use:
 
 1. Setup the BH_APP_CAL_API_KEY environment variable
-2. docker-compose up or ./gradlew bootRun
+2. sh ./tools/scripts/run.sh (to run as Docker container) or ./gradlew bootRun
 3. Import collections and environments from ./tools/postman-collections to your Postman
 4. Pick the proper environment in Postman (Docker or Local) and execute request.
-5. Optionally you can pick the "Lambda" environment. I deployed the app to AWS. Cold start takes a few seconds.
+5. Optionally you can pick the "Lambda" environment. I deployed the app to AWS. Cold start takes up tp 6 seconds.
 
 
 # What have I managed to do?
