@@ -32,10 +32,12 @@ public class CalendarificComObtainer implements HolidayInfoObtainer {
 
     @Override
     public HolidayInfo get(String firstCountryCode, String secondCountryCode, LocalDate date) throws HolidayObtainingRuntimeException {
-        List<List<CalendarificComHoliday>> holidays = Stream.of(firstCountryCode, secondCountryCode).parallel().map((code) -> {
+        List<List<CalendarificComHoliday>> holidays = new ArrayList<>();
+
+        Stream.of(firstCountryCode, secondCountryCode).parallel().forEachOrdered((code) -> {
             CalendarificComApiResponse holidaysResponse = client.getHolidayResponse(code, date);
-            return getSortedHolidaysAfter(holidaysResponse, date);
-        }).collect(Collectors.toList());
+            holidays.add(getSortedHolidaysAfter(holidaysResponse, date));
+        });
 
         return findNearestCommonHolidays(holidays.get(0), holidays.get(1)).orElse(null);
     }

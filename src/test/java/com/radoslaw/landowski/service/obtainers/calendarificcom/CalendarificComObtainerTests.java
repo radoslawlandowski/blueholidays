@@ -13,11 +13,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -25,17 +20,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CalendarificComObtainerTests {
-
-    public static final String API_KEY = "my-api-key";
-    public static final String BASE_URL = "http://my-base-url";
-
-
-    @Mock()
-    RestTemplate restTemplate;
 
     @Mock
     CalendarificComHttpClient calendarificComHttpClient;

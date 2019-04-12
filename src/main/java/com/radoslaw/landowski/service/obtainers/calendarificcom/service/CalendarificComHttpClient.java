@@ -2,7 +2,6 @@ package com.radoslaw.landowski.service.obtainers.calendarificcom.service;
 
 import com.radoslaw.landowski.exceptions.HolidayObtainingRuntimeException;
 import com.radoslaw.landowski.service.obtainers.calendarificcom.CalendarificComConfig;
-import com.radoslaw.landowski.service.obtainers.calendarificcom.CalendarificComObtainer;
 import com.radoslaw.landowski.service.obtainers.calendarificcom.model.CalendarificComApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
