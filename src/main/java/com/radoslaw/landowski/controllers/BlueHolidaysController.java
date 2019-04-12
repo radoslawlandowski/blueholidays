@@ -1,7 +1,7 @@
 package com.radoslaw.landowski.controllers;
 
 import com.radoslaw.landowski.config.BlueHolidaysConfig;
-import com.radoslaw.landowski.exceptions.HolidayObtainingException;
+import com.radoslaw.landowski.exceptions.HolidayObtainingRuntimeException;
 import com.radoslaw.landowski.model.HolidayInfoResponse;
 import com.radoslaw.landowski.service.obtainers.HolidayInfoObtainer;
 import com.radoslaw.landowski.validators.ISOCountryCode;
@@ -33,13 +33,13 @@ public class BlueHolidaysController {
      * @return searches within the year taken from 'date'
  *             returns the nearest holiday names that happen in both countries in the same day past the given 'date'.
      *         returns 'null' if no commmon holidays are found for the given year in 'date'.
-     * @throws HolidayObtainingException
+     * @throws HolidayObtainingRuntimeException
      */
     @RequestMapping("/")
     public HolidayInfoResponse getHolidayInfo(@RequestParam("firstCountryCode") @ISOCountryCode String firstCountryCode,
                                               @RequestParam("secondCountryCode") @ISOCountryCode String secondCountryCode,
                                               @RequestParam @NotNull @DateTimeFormat(pattern=BlueHolidaysConfig.INPUT_DATE_FORMAT) LocalDate date)
-    throws HolidayObtainingException {
+    throws HolidayObtainingRuntimeException {
 
         LOGGER.info("Requested for obtaining holiday info with: 'firstCountryCode': {}, secondCountryCode: {}, date: {}",
                 firstCountryCode,

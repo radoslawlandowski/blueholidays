@@ -1,6 +1,6 @@
 package com.radoslaw.landowski.exceptionhandlers;
 
-import com.radoslaw.landowski.exceptions.HolidayObtainingException;
+import com.radoslaw.landowski.exceptions.HolidayObtainingRuntimeException;
 import com.radoslaw.landowski.model.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,8 +50,8 @@ public class ExceptionHandlers {
      * @param exception
      * @return general error message that is returned to the user. Protects from leaking sensitive stack traces to users
      */
-    @ExceptionHandler(HolidayObtainingException.class)
-    public ResponseEntity<ErrorResponse> handleBlueHolidaysException(HolidayObtainingException exception) {
+    @ExceptionHandler(HolidayObtainingRuntimeException.class)
+    public ResponseEntity<ErrorResponse> handleBlueHolidaysException(HolidayObtainingRuntimeException exception) {
         ErrorResponse response = ErrorResponse.builder().description(INTERNAL_SERVER_ERROR_DESCRIPTION).build();
 
         log(exception);
