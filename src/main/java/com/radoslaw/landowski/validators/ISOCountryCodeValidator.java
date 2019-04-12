@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Validator that checks whether a given string is one of the IS0-3166 country codes
+ * Validates whether a given string is one of the IS0-3166 country codes
  */
 @Component
 public class ISOCountryCodeValidator implements ConstraintValidator<ISOCountryCode, String> {

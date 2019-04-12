@@ -15,5 +15,6 @@ functions:
           path: /
           method: get
     timeout: 30
+    memorySize: 3008
     environment:
       BH_APP_CAL_API_KEY: ${env:BH_APP_CAL_API_KEY}
