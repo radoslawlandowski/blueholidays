@@ -6,6 +6,7 @@ import com.radoslaw.landowski.service.obtainers.calendarificcom.model.Calendarif
 import com.radoslaw.landowski.service.obtainers.calendarificcom.model.CalendarificComDate;
 import com.radoslaw.landowski.service.obtainers.calendarificcom.model.CalendarificComHoliday;
 import com.radoslaw.landowski.service.obtainers.calendarificcom.model.CalendarificComResponse;
+import com.radoslaw.landowski.service.obtainers.calendarificcom.service.CalendarificComHttpClient;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,16 +38,13 @@ public class CalendarificComObtainerTests {
     RestTemplate restTemplate;
 
     @Mock
-    CalendarificComConfig calendarificComConfig;
+    CalendarificComHttpClient calendarificComHttpClient;
 
     CalendarificComObtainer obtainer;
 
     @Before
     public void before() {
-        Mockito.when(calendarificComConfig.getApiKey()).thenReturn(API_KEY);
-        Mockito.when(calendarificComConfig.getBaseUrl()).thenReturn(BASE_URL);
-
-        obtainer = new CalendarificComObtainer(restTemplate, calendarificComConfig);
+        obtainer = new CalendarificComObtainer(calendarificComHttpClient);
     }
 
     @Test
@@ -54,15 +52,14 @@ public class CalendarificComObtainerTests {
         int year = 2012;
         String countryCode = "PL";
         String holidayName = "Holiday name";
-        String expectedUrl = String.format("%s?country=%s&year=%d&api_key=%s", BASE_URL, countryCode, year, API_KEY);
+        LocalDate date = LocalDate.of(year, 1, 1);
         LocalDate expectedHolidayDate = LocalDate.of(year, 1, 5);
         HolidayInfo expectedInfo = new HolidayInfo(expectedHolidayDate, holidayName, holidayName);
         CalendarificComApiResponse apiResponse = getPrebuiltBasicApiResponse(expectedHolidayDate, holidayName);
 
-        Mockito.when(restTemplate.exchange(eq(expectedUrl), eq(HttpMethod.GET), any(HttpEntity.class), eq(CalendarificComApiResponse.class)))
-                .thenReturn(new ResponseEntity<>(apiResponse, HttpStatus.OK));
+        Mockito.when(calendarificComHttpClient.getHolidayResponse(countryCode, date)).thenReturn(apiResponse);
 
-        HolidayInfo actualInfo = obtainer.get(countryCode, countryCode, LocalDate.of(year, 1, 1));
+        HolidayInfo actualInfo = obtainer.get(countryCode, countryCode, date);
 
         assertEquals(expectedInfo, actualInfo);
     }
@@ -71,14 +68,13 @@ public class CalendarificComObtainerTests {
     public void nullShouldBeReturnedForNonExistingHolidays() throws HolidayObtainingRuntimeException {
         int year = 2012;
         String countryCode = "PL";
-        String expectedUrl = String.format("%s?country=%s&year=%d&api_key=%s", BASE_URL, countryCode, year, API_KEY);
         HolidayInfo expectedInfo = null;
+        LocalDate date = LocalDate.of(year, 1, 1);
         CalendarificComApiResponse apiResponse = getPrebuiltBasicApiResponse(null, null);
 
-        Mockito.when(restTemplate.exchange(eq(expectedUrl), eq(HttpMethod.GET), any(HttpEntity.class), eq(CalendarificComApiResponse.class)))
-                .thenReturn(new ResponseEntity<>(apiResponse, HttpStatus.OK));
+        Mockito.when(calendarificComHttpClient.getHolidayResponse(countryCode, date)).thenReturn(apiResponse);
 
-        HolidayInfo actualInfo = obtainer.get(countryCode, countryCode, LocalDate.of(year, 1, 1));
+        HolidayInfo actualInfo = obtainer.get(countryCode, countryCode, date);
 
         assertEquals(expectedInfo, actualInfo);
     }
